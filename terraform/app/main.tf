@@ -8,6 +8,8 @@ provider "aws" {
 }
 
 
+
+/*
 data "archive_file" "src" {
   type        = "zip"
   source_file = "${path.module}/lambda.py"
@@ -116,10 +118,6 @@ resource "aws_lambda_permission" "apigw_lambda" {
   function_name = aws_lambda_function.hello_lambda.function_name
   principal     = "apigateway.amazonaws.com"
 
-  # More: http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-api.html
-  #source_arn = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.api.id}/*/${aws_api_gateway_method.method.http_method}${aws_api_gateway_resource.resource.path}"
-  #arn:aws:execute-api:us-east-1:179003522493:lo0zy889z5/*/GET/resource
-  #arn:aws:execute-api:us-east-1:179003522493:lo0zy889z5/test/*/GET/resource
   source_arn = "${aws_api_gateway_deployment.deployment.execution_arn}/${aws_api_gateway_method.method.http_method}${aws_api_gateway_resource.resource.path}"
 }
 
@@ -131,3 +129,4 @@ resource "aws_api_gateway_deployment" "deployment" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   stage_name  = "test"
 }
+*/
