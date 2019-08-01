@@ -8,6 +8,7 @@ terraform {
 #Provider
 # Implement cloud specific API and Terraform API.
 # Provider configuation is specific to each provider.
+# Providers expose Data Sources and Resources to Terraform.
 provider "aws" {
   version = "~> 2.0"
   region  = "us-east-1"
@@ -19,27 +20,42 @@ provider "aws" {
   #settings if they are present.
 }
 
+
 /*
 #Data Sources
 # Objects NOT managed by Terraform.
+
 data "aws_caller_identity" "current" {}
+
+data "aws_availability_zones" "available" {
+  state = "available"
+}
 
 
 #Resources
 # Objects managed by Terraform such as VMs or S3 Buckets.
+# Declaring a Resource tells Terraform that it should CREATE
+# and manage the Resource described.  If the Resource already exists
+# it must be imported into Terraform's state.
 resource "aws_s3_bucket" "bucket1" {
 }
+
 
 #Outputs
 # Outputs are printed by the CLI after `apply`.
 # These can reveal calculated values.
 # Also used in more advanced use cases: modules, remote_state
+# Outputs can be retrieved at any time by running `terraform output`
 output "bucket_info" {
   value = aws_s3_bucket.bucket1
 }
 
 #output "aws_caller_info" {
 #  value = aws_caller_identity.current
+#}
+
+#output "aws_availability_zones" {
+#  value = aws_availability_zones.available
 #}
 
 
@@ -75,7 +91,11 @@ resource "aws_s3_bucket" "bucket4" {
 # or in files: terraform.tfvars or *.auto.tfvars
 # or in environment variables: TF_VAR_bucket_name
 variable "bucket_name" {
+  # `type` is an optional data type specification
   type    = "string"
+
+  # `default` is the optional default value.  If `default` is ommited
+  # then a value must be supplied.
   #default = "my-bucket"
 }
 
@@ -277,5 +297,14 @@ output "directive" {
     Hi ${local.person.name}
     %{ endif }
   EOT
+}
+
+output "iterated" {
+  value = <<-EOT
+  Directives can also iterate...
+  %{ for number in local.evens }
+  ${number} is even.
+  %{ endfor }
+EOT
 }
 */
